@@ -5,14 +5,21 @@
 
 
 Snakes::Snakes(){
-    sf::RectangleShape Head (sf::Vector2f(size,size));
-    sf::RectangleShape Apple (sf::Vector2f(size,size));
-    sf::Text score(std::to_string(num), font, 50);
-    sf::Text FPS("FPS: "+std::to_string(fps),font,20);
-    sf::Text MaxFPS ("MAX FPS: "+std::to_string(mfps),font,20);
+    Head.setSize(sf::Vector2f(size,size));
+    Apple.setSize(sf::Vector2f(size,size));
 
-    window.create(sf::VideoMode(width,height,32),"SFML Snakes",sf::Style::None);
-    window.setFramerateLimit(80);
+    score.setString(std::to_string(num));
+    score.setFont(font);
+    score.setCharacterSize(50);
+
+    FPS.setString(std::to_string(fps));
+    FPS.setFont(font);
+    FPS.setCharacterSize(20);
+
+    FPS.setString("MAX FPS: "+std::to_string(mfps));
+    FPS.setFont(font);
+    FPS.setCharacterSize(20);
+
     Head.setFillColor(sf::Color::Green);
     Apple.setFillColor(sf::Color::Red);
     font.loadFromFile("/Users/jopouradierduteil/CLionProjects/untitled/arial.ttf"); //il peut y avoir erreur
@@ -23,66 +30,37 @@ Snakes::Snakes(){
     //on initialise une pomme avec des coordonnées random
     f.x=rand()%size;
     f.y=rand()%size;
+}
 
-    while (window.isOpen()){
-        sf::Event event;
+void Snakes::Play(){
+    play=true;
+    window.create(sf::VideoMode(width,height,32),"SFML Snakes",sf::Style::None);
+    window.setFramerateLimit(80);
+    while (play) Running();
+}
 
-        //prise en compte des touches
-        while (window.pollEvent(event)) {
-            switch (event.type){
-                case (sf::Event::KeyReleased):
-                    if (event.key.code==sf::Keyboard::Escape){
-                        window.close();
-                    }
-                    break;
-                case (sf::Event::KeyPressed):
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) dir="up";
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) dir="down";
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) dir="right";
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) dir="left";
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) { //pour afficher les FPS
-                        if (!afficherFPS) afficherFPS=true;
-                        else afficherFPS= false;
-                    }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && num ==0) num=1; //pour rejouer
+void Snakes::Running(){
+    sf::Event event;
+    //prise en compte des touches
+    while (window.pollEvent(event)) getKey (event);
 
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        if (clockfct.getElapsedTime().asMilliseconds()>100){
-            Direction();
-            Collision();
-            clockfct.restart();
-        }
-
-        //modification des différents labels
-        Apple.setPosition(f.x*size,f.y*size);
-        score.setString(std::to_string(num));
-        currentTime = timer.restart().asSeconds();
-        fps = 1.0f / currentTime; // the asSeconds returns a float
-        int floorfps=floor(fps);
-        if (floorfps>mfps) mfps=floorfps;
-        FPS.setString("FPS: "+std::to_string(floorfps));
-        MaxFPS.setString(("MAX FPS: "+std::to_string(mfps)));
-
-        //on affiche le tout
-        window.clear();
-        //on draw chaque partie du serpent
-        for (int i=0;i<num;i++){
-            Head.setPosition(s[i].x*size,s[i].y*size);
-            window.draw(Head);
-        }
-        if(afficherFPS) {
-            window.draw(FPS);
-            window.draw(MaxFPS);
-        }
-        window.draw(Apple);
-        window.draw(score);
-        window.display();
+    if (clockfct.getElapsedTime().asMilliseconds()>100){
+        Direction();
+        Collision();
+        clockfct.restart();
     }
+
+    //modification des différents labels
+    Apple.setPosition(f.x*size,f.y*size);
+    score.setString(std::to_string(num));
+    currentTime = timer.restart().asSeconds();
+    fps = 1.0f / currentTime; // the asSeconds returns a float
+    int floorfps=floor(fps);
+    if (floorfps>mfps) mfps=floorfps;
+    FPS.setString("FPS: "+std::to_string(floorfps));
+    MaxFPS.setString(("MAX FPS: "+std::to_string(mfps)));
+
+    Drawing();
 }
 
 void Snakes::Direction(){
@@ -114,4 +92,51 @@ void Snakes::Collision(){
         f.x=rand()%size;
         f.y=rand()%size;
     }
+}
+
+void Snakes::Drawing() {
+    //on affiche le tout
+    window.clear();
+    //on draw chaque partie du serpent
+    for (int i=0;i<num;i++){
+        Head.setPosition(s[i].x*size,s[i].y*size);
+        window.draw(Head);
+    }
+    if(afficherFPS) {
+        window.draw(FPS);
+        window.draw(MaxFPS);
+    }
+    window.draw(Apple);
+    window.draw(score);
+    window.display();
+}
+
+void Snakes::getKey(sf::Event event){
+    switch (event.type){
+        case (sf::Event::KeyReleased):
+            if (event.key.code==sf::Keyboard::Escape){
+                Stop();
+            }
+            break;
+        case (sf::Event::KeyPressed):
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) dir="up";
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) dir="down";
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) dir="right";
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) dir="left";
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) { //pour afficher les FPS
+                if (!afficherFPS) afficherFPS=true;
+                else afficherFPS= false;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && num ==0) num=1; //pour rejouer
+
+            break;
+        default:
+            break;
+    }
+}
+
+
+void Snakes::Stop(){
+    play= false;
+    window.close();
 }

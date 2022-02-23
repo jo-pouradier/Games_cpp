@@ -3,5 +3,6 @@
 int main(){
 
     Pong game;
+    game.Play();
     return 0;
 }
