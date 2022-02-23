@@ -29,7 +29,7 @@ void Pong::Play(){
 }
 
 void Pong::Running(){
-    sf::Event event; //variables des evenements
+    sf::Event event{}; //variables des evenements
 
     while (window.pollEvent(event)) getKey(event);
     //gestion du clavier
@@ -112,9 +112,6 @@ void Pong::CheckBtn(){
             posRRightY=WIN_HEIGHT-rHeight ;
         }
     }
-    if (button.escape){
-        Stop();
-    }
     if (button.cheat){
         Cheat();
     }
@@ -146,36 +143,30 @@ string Pong::getName() {
 }
 
 void Pong::getKey(sf::Event event){
+    if (event.type==Event::Closed) Stop();
+    char touche=event.key.code;
+
     switch(event.type){
         case (Event::KeyPressed):
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) button.up=true;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) button.down=true;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) button.right=true;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) button.left=true;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+            if (touche==sf::Keyboard::Escape) Stop();
+            if (touche==sf::Keyboard::Up) button.up=true;
+            if (touche==sf::Keyboard::Down) button.down=true;
+            if (touche==sf::Keyboard::Right) button.right=true;
+            if (touche==sf::Keyboard::Left) button.left=true;
+            if (touche==sf::Keyboard::C) {
                 if (!button.cheat) button.cheat = true;
                 else button.cheat = false;
             }
             break;
+
         case (Event::KeyReleased):
-            switch (event.key.code){
-                case Keyboard::Escape:
-                    Stop();
-                    break;
-                case Keyboard::Up:
-                    button.up=false;
-                    break;
-                case Keyboard::Down:
-                    button.down=false;
-                    break;
-                case Keyboard::Right:
-                    button.right=false;
-                    break;
-                case Keyboard::Left:
-                    button.left=false;
-                    break;
-                default:
-                    break;
-            }
+            if (touche==Keyboard::Up) button.up=false;
+            if (touche==Keyboard::Down) button.down=false;
+            if (touche==Keyboard::Right) button.right=false;
+            if (touche==Keyboard::Left) button.left=false;
+            break;
+        default:
+            break;
+
     }
 }

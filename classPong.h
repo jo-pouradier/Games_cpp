@@ -7,26 +7,24 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-//#include "input.h"
 
 using namespace sf;
 using namespace  std;
 
 class Pong {
-    struct Button {bool left, right, up, down,escape,cheat;};
+    struct Button {bool left, right, up, down,cheat;};
 
 public:
     Pong();
-    void getKey(Event);
+    void SetWindow();
     void Play();
     void Running();
     void Stop();
-    void SetWindow();
-    void SetText(Text &txt, String str);
     void CheckBtn();
     void UpdateBall();
     void UpdateGame();
     void Cheat();
+    void getKey(Event);
     string getName();
 
 private:
@@ -40,7 +38,6 @@ private:
     const int WIN_HEIGHT = 600;
 
     RenderWindow window;
-    //Input input;
     Font font;
     Text txt;
 

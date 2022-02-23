@@ -51,14 +51,14 @@ int main(){
     textPongPosition.x=(40),textPongPosition.y=50;
     textPong.setPosition(textPongPosition);
     textPong.setFont(font);
-    textPong.setColor(WhiteG);
+    textPong.setFillColor(WhiteG);
 //    textPong.setOutlineColor(sf::Color::Red);     // c'est la bordure de chaque lettre (tres moche)
 //    textPong.setOutlineThickness(3);
     textSnakePosition.x=(40),textSnakePosition.y=100;
     textSnake.setString(GameSnake.getName());
     textSnake.setPosition(textSnakePosition);
     textSnake.setFont(font);
-    textSnake.setColor(WhiteG);
+    textSnake.setFillColor(WhiteG);
 
     RectSize.x=WIN_WIDTH;RectSize.y=40;
     RectPong.setSize(RectSize);
@@ -69,8 +69,8 @@ int main(){
     RectSnake.setPosition(0,textSnakePosition.y);
 
     while(window.isOpen()){
-        sf::Event event;
-        mPosition = mouse.getPosition(window);
+        sf::Event event{};
+        mPosition = sf::Mouse::getPosition(window);
         mouseHover(mPosition);
         while (window.pollEvent(event)){
             switch (event.type) {
