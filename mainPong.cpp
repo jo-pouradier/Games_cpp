@@ -1,7 +1,7 @@
-#include "game.h"
+#include "classPong.h"
 
 int main(){
 
-    Game game;
+    Pong game;
     return 0;
 }

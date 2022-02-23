@@ -12,10 +12,10 @@
 using namespace sf;
 using namespace  std;
 
-class Game {
+class Pong {
 
 public:
-    Game();
+    Pong();
     void SetWindow();
     void SetText(Text &txt, String str);
     void CheckBtn();

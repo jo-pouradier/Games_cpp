@@ -33,7 +33,7 @@ void Input::InputHandler(Event event, RenderWindow& window) {
             case Keyboard::Down:
                 button.down=true;
                 break;
-            case Keyboard::T:
+            case Keyboard::C:
                 if (!button.cheat){
                     button.cheat= true;
                 }

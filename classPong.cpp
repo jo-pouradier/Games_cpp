@@ -1,9 +1,11 @@
 //
 // Created by Joseph Pouradier duteil on 22/02/2022.
 //
-#include "game.h"
+#include "classPong.h"
 
-Game::Game(){
+Pong
+::Pong
+(){
 
     //initialisation des raquettes, de la balle et du score
     //creation des raquettes
@@ -45,11 +47,14 @@ Game::Game(){
 
 }
 
-void Game::SetWindow() {
+void Pong
+::SetWindow() {
     window.create(VideoMode(WIN_WIDTH,WIN_HEIGHT,32),"Pong SFML");
+    window.setFramerateLimit(80);
 }
 
-void Game::UpdateBall(){
+void Pong
+::UpdateBall(){
     posBX+=bDir.x*bSpeed;
     posBY+=bDir.y*bSpeed;
 
@@ -86,7 +91,8 @@ void Game::UpdateBall(){
     }
 }
 
-void Game::SetText(Text& txt, String str){
+void Pong
+::SetText(Text& txt, String str){
     txt.setFont(font);
     txt.setString(str);
     txt.setCharacterSize(35);
@@ -94,7 +100,8 @@ void Game::SetText(Text& txt, String str){
     txt.setPosition((WIN_WIDTH/2)-40,10);
 }
 
-void Game::CheckBtn(){
+void Pong
+::CheckBtn(){
     //la position de la raquette est faite par rapport au coin supp gauche, axe y de haut en bas !
     //raquette de gauche
     if (input.GetButton().up){
@@ -130,7 +137,8 @@ void Game::CheckBtn(){
     }
 }
 
-void Game::UpdateGame(RectangleShape R1,RectangleShape R2,CircleShape B){
+void Pong
+::UpdateGame(RectangleShape R1,RectangleShape R2,CircleShape B){
     //on dessine enfin nos element
     window.clear(Color::Black);
     window.draw(txt);
@@ -141,6 +149,7 @@ void Game::UpdateGame(RectangleShape R1,RectangleShape R2,CircleShape B){
     window.display();
 }
 
-void Game::Cheat() {
+void Pong
+::Cheat() {
     posRLeftY=posBY-50;
 }
