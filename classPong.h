@@ -7,15 +7,17 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "input.h"
+//#include "input.h"
 
 using namespace sf;
 using namespace  std;
 
 class Pong {
+    struct Button {bool left, right, up, down,escape,cheat;};
 
 public:
     Pong();
+    void getKey(Event);
     void Play();
     void Running();
     void Stop();
@@ -25,15 +27,20 @@ public:
     void UpdateBall();
     void UpdateGame();
     void Cheat();
+    string getName();
 
 private:
+    Button button;
+
+    string name="Pong";
+
     bool play=false;
 
     const int WIN_WIDTH = 800;
     const int WIN_HEIGHT = 600;
 
     RenderWindow window;
-    Input input;
+    //Input input;
     Font font;
     Text txt;
 

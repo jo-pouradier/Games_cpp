@@ -2,6 +2,7 @@
 // Created by Joseph Pouradier duteil on 22/02/2022.
 //
 #include "classPong.h"
+#include <iostream>
 
 Pong::Pong(){
     //creation des raquettes
@@ -30,8 +31,7 @@ void Pong::Play(){
 void Pong::Running(){
     sf::Event event; //variables des evenements
 
-    while (window.pollEvent(event)) input.InputHandler(event, window);
-
+    while (window.pollEvent(event)) getKey(event);
     //gestion du clavier
     CheckBtn();
     //on repositionne les raquettes
@@ -87,35 +87,35 @@ void Pong::UpdateBall(){
 void Pong::CheckBtn(){
     //la position de la raquette est faite par rapport au coin supp gauche, axe y de haut en bas !
     //raquette de gauche
-    if (input.GetButton().up){
+    if (button.up){
         posRLeftY-=rSpeed;
         if (posRLeftY<0){
             posRLeftY=0;
         }
     }
-    if (input.GetButton().down){
+    if (button.down){
         posRLeftY+=rSpeed;
         if (posRLeftY>WIN_HEIGHT-rHeight){
             posRLeftY=WIN_HEIGHT-rHeight ;
         }
     }
     //raquette de droite
-    if (input.GetButton().left){
+    if (button.left){
         posRRightY-=rSpeed;
         if (posRRightY<0){
             posRRightY=0;
         }
     }
-    if (input.GetButton().right){
+    if (button.right){
         posRRightY+=rSpeed;
         if (posRRightY>WIN_HEIGHT-rHeight){
             posRRightY=WIN_HEIGHT-rHeight ;
         }
     }
-    if (input.GetButton().escape){
+    if (button.escape){
         Stop();
     }
-    if (input.GetButton().cheat){
+    if (button.cheat){
         Cheat();
     }
 }
@@ -139,4 +139,43 @@ void Pong::Cheat() {
 void Pong::Stop(){
     play=false;
     window.close();
+}
+
+string Pong::getName() {
+    return name;
+}
+
+void Pong::getKey(sf::Event event){
+    switch(event.type){
+        case (Event::KeyPressed):
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) button.up=true;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) button.down=true;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) button.right=true;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) button.left=true;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+                if (!button.cheat) button.cheat = true;
+                else button.cheat = false;
+            }
+            break;
+        case (Event::KeyReleased):
+            switch (event.key.code){
+                case Keyboard::Escape:
+                    Stop();
+                    break;
+                case Keyboard::Up:
+                    button.up=false;
+                    break;
+                case Keyboard::Down:
+                    button.down=false;
+                    break;
+                case Keyboard::Right:
+                    button.right=false;
+                    break;
+                case Keyboard::Left:
+                    button.left=false;
+                    break;
+                default:
+                    break;
+            }
+    }
 }

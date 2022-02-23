@@ -14,10 +14,10 @@ include_directories(SFML_INCLUDE_DIR)
 find_package(SFML 2.5.1 COMPONENTS system window graphics network audio)
 
 add_executable(MyProject main.cpp)
-add_executable(Pong Pong.cpp classPong.cpp classPong.h input.cpp input.h)
+add_executable(Pong Pong.cpp classPong.cpp classPong.h )#input.cpp input.h
 add_executable(Snacks mainSnacks.cpp)
 add_executable(cSnakes Snakes.cpp classSnake.cpp classSnake.h)
-add_executable(Games Games.cpp classSnake.cpp classSnake.h classPong.cpp classPong.h input.cpp input.h)
+add_executable(Games Games.cpp classSnake.cpp classSnake.h classPong.cpp classPong.h )#input.cpp input.h
 
 target_link_libraries (MyProject sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
 target_link_libraries (Pong sfml-graphics sfml-window sfml-system sfml-audio sfml-network)

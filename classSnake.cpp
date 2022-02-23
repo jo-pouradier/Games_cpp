@@ -140,3 +140,7 @@ void Snakes::Stop(){
     play= false;
     window.close();
 }
+
+std::string Snakes::getName() {
+    return name;
+}

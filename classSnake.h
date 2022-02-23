@@ -15,9 +15,12 @@ public:
     void Collision();
     void Drawing();
     void getKey();
+    std::string getName();
 
 
 private:
+    std::string name="Snake";
+
     bool play=false;
     //variables pour le calcul des fps
     float fps=0;
