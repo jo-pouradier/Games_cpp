@@ -15,6 +15,8 @@ find_package(SFML 2.5.1 COMPONENTS system window graphics network audio)
 
 add_executable(MyProject main.cpp)
 add_executable(Pong mainPong.cpp game.cpp game.h input.cpp input.h)
+add_executable(Snacks mainSnacks.cpp)
 
 target_link_libraries (MyProject sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
 target_link_libraries (Pong sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
+target_link_libraries (Snacks sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
