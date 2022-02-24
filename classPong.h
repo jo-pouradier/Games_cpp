@@ -31,6 +31,7 @@ private:
     Button button;
 
     string name="Pong";
+    string fontFile="../arial.ttf";
 
     bool play=false;
 

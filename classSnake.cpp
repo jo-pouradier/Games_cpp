@@ -22,7 +22,7 @@ Snakes::Snakes(){
 
     Head.setFillColor(sf::Color::Green);
     Apple.setFillColor(sf::Color::Red);
-    font.loadFromFile("/Users/jopouradierduteil/CLionProjects/untitled/arial.ttf"); //il peut y avoir erreur
+    font.loadFromFile(fontFile); //il peut y avoir erreur
     score.setPosition(width/2,10);
     FPS.setPosition(width-150,10);
     MaxFPS.setPosition(width-150,30);

@@ -20,6 +20,7 @@ public:
 
 private:
     std::string name="Snake";
+    std::string fontFile="../arial.ttf";
 
     bool play=false;
     //variables pour le calcul des fps

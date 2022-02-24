@@ -15,7 +15,7 @@ Pong::Pong()
     Balle.setRadius(15);
     Balle.setPosition(posBX, posBY);
     // creation du text
-    font.loadFromFile("/Users/jopouradierduteil/CLionProjects/untitled/arial.ttf");
+    font.loadFromFile(fontFile);
     txt.setString(to_string(scoreJ1) + " | " + to_string(scoreJ2));
     txt.setFont(font);
     txt.setCharacterSize(35);
@@ -197,13 +197,13 @@ void Pong::getKey(sf::Event event)
         break;
 
     case (Event::KeyReleased):
-        if (touche == Keyboard::Up)
+        if (touche == sf::Keyboard::Up)
             button.up = false;
-        if (touche == Keyboard::Down)
+        if (touche == sf::Keyboard::Down)
             button.down = false;
-        if (touche == Keyboard::Right)
+        if (touche == sf::Keyboard::Right)
             button.right = false;
-        if (touche == Keyboard::Left)
+        if (touche == sf::Keyboard::Left)
             button.left = false;
         break;
     default:

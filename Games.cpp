@@ -74,6 +74,9 @@ int main(){
         mouseHover(mPosition);
         while (window.pollEvent(event)){
             switch (event.type) {
+                case (sf::Event::Closed):
+                    window.close();
+                    break;
                 case (sf::Event::KeyReleased):
                     if (event.key.code == sf::Keyboard::Escape) {
                         window.close();
