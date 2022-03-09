@@ -2,6 +2,7 @@
 #include <iostream>
 #include "classSnake.h"
 #include "classPong.h"
+#include "classShooter.h"
 
 Pong GamePong;
 Snakes GameSnake;
@@ -19,6 +20,8 @@ sf::Vector2f RectSize;
 sf::Mouse mouse;
 sf::Vector2i mPosition;
 sf::Vector2f textPongPosition,textSnakePosition;
+
+std::string fontFile("arial.ttf");
 
 
 void mouseHover(sf::Vector2i mPosition){
@@ -45,7 +48,7 @@ int main(){
     window.create (VideoMode(WIN_WIDTH,WIN_HEIGHT,32),"Games");
     window.setFramerateLimit(30);
 
-    font.loadFromFile("/Users/jopouradierduteil/CLionProjects/untitled/arial.ttf");
+    font.loadFromFile(fontFile);
 
     textPong.setString(GamePong.getName());
     textPongPosition.x=(40),textPongPosition.y=50;

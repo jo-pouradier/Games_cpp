@@ -177,8 +177,6 @@ void Pong::getKey(sf::Event event)
     switch (event.type)
     {
     case (Event::KeyPressed):
-        if (touche == sf::Keyboard::Escape)
-            Stop();
         if (touche == sf::Keyboard::Up)
             button.up = true;
         if (touche == sf::Keyboard::Down)
@@ -197,6 +195,8 @@ void Pong::getKey(sf::Event event)
         break;
 
     case (Event::KeyReleased):
+        if (touche == sf::Keyboard::Escape)
+            Stop();
         if (touche == sf::Keyboard::Up)
             button.up = false;
         if (touche == sf::Keyboard::Down)

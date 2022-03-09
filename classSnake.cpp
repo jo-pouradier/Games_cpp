@@ -34,7 +34,7 @@ Snakes::Snakes(){
 
 void Snakes::Play(){
     play=true;
-    window.create(sf::VideoMode(width,height,32),"SFML Snakes",sf::Style::None);
+    window.create(sf::VideoMode(width,height,32),"SFML Snakes");
     window.setFramerateLimit(80);
     while (play) Running();
 }
@@ -113,6 +113,9 @@ void Snakes::Drawing() {
 
 void Snakes::getKey(sf::Event event){
     switch (event.type){
+        case (sf::Event::Closed):
+            Stop();
+            break;
         case (sf::Event::KeyReleased):
             if (event.key.code==sf::Keyboard::Escape){
                 Stop();
