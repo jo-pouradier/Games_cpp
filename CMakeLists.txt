@@ -16,7 +16,7 @@ find_package(SFML 2.5.1 COMPONENTS system window graphics network audio)
 
 add_executable(MyProject main.cpp)
 add_executable(Pong Pong.cpp classPong.cpp classPong.h )
-add_executable(Snacks mainSnacks.cpp)
+add_executable(Snacks Snakes.cpp)
 add_executable(cSnakes Snakes.cpp classSnake.cpp classSnake.h)
 add_executable(Games Games.cpp classSnake.cpp classSnake.h classPong.cpp classPong.h classShooter.cpp classShooter.h classBullet.cpp classBullet.h)
 add_executable(Shooter Shooter.cpp classShooter.cpp classShooter.h classBullet.cpp classBullet.h)

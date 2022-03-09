@@ -10,7 +10,7 @@
 #include "classBullet.h"
 
 class Shooter{
-    struct Button {bool left= false, right= false, up= false, down= false;};
+    struct Button {bool left= false, right= false, up= false, down= false, shoot=false;};
 
 public:
     Shooter();
@@ -32,6 +32,7 @@ private:
 
     sf::RenderWindow window;
     sf::RectangleShape rect;
+    sf::Clock shootClock;
 
     sf::Color WHITE=sf::Color(255,255,255,255);
     sf::Color GRAY=sf::Color(24,24,26,255);
@@ -44,6 +45,7 @@ private:
     float dx=0;
     float dy=0;
     float newTheta=0;
+    float shootTimer=0.1;
 
     sf::Vector2f rectSize;
     sf::Vector2f rectPosition;

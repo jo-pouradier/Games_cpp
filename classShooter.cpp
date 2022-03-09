@@ -8,7 +8,6 @@
 #include "classShooter.h"
 #include "classBullet.h"
 
-
 Shooter::Shooter(){
     rectSize.x= rect_width;
     rectSize.y= rect_height;
@@ -36,8 +35,8 @@ void Shooter::Running(){
     sf::Event event{};
     while (window.pollEvent(event)) Input(event);
     Mouvement();
+    Shoot();
     if (sf::Event::MouseMoved) Rotation();
-//    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) Shoot();
     moveBullet();
     Drawing();
 }
@@ -106,23 +105,31 @@ void Shooter::Input(sf::Event event) {
                 button.left=false;
             break;
         case sf::Event::MouseButtonPressed:
-            Shoot();
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) button.shoot=true;
+            break;
+        case sf::Event::MouseButtonReleased:
+            if (not sf::Mouse::isButtonPressed(sf::Mouse::Left)) button.shoot=false;
             break;
     }
 }
 
 void Shooter::Shoot(){
-    b1.getShape().setPosition(rect.getPosition().x, rect.getPosition().y);
-    sf::Vector2f mousePosNow=sf::Vector2f(sf::Mouse::getPosition(window));
-    b1.setDir(rectPosition-mousePosNow);
-    bullets.push_back(Bullet(b1));
-    std::cout<<"size: "<<bullets.size()<<std::endl;
+    if (button.shoot && shootClock.getElapsedTime().asSeconds()>shootTimer){
+        b1.Positioning(rect.getPosition());
+        sf::Vector2f mousePosNow=sf::Vector2f(sf::Mouse::getPosition(window));
+        b1.setDir(sf::Vector2f(mousePosNow-rectPosition));
+        bullets.push_back(Bullet(b1));
+        shootClock.restart();
+    }
 }
 
 void Shooter::moveBullet(){
-    for (auto & bullet : bullets){
-        bullet.getShape().move(bullet.getVel().x, bullet.getVel().y);
-        std::cout<< "x= "<<bullet.getVel().x<<", y= "<<bullet.getVel().y<<std::endl;
-        std::cout<< "Px= "<<bullet.getShape().getPosition().x<<", Py= "<<bullet.getShape().getPosition().y<<std::endl;
+    for (int i=0; i<bullets.size();i++){
+        bullets[i].Moving();
+        //collisions avec les bords
+        if (bullets[i].getShape().getPosition().x < 0 || bullets[i].getShape().getPosition().x > WIDTH
+        || bullets[i].getShape().getPosition().y < 0 || bullets[i].getShape().getPosition().y > HEIGHT){
+            bullets.erase(bullets.begin()+i);
+        }
     }
 }

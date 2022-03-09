@@ -22,3 +22,11 @@ sf::CircleShape Bullet::getShape(){
 sf::Vector2f Bullet::getVel() {
     return dir*speed;
 }
+
+void Bullet::Positioning(sf::Vector2f pos){
+    shape.setPosition(pos);
+}
+
+void Bullet::Moving(){
+    shape.move(dir*speed);
+}
