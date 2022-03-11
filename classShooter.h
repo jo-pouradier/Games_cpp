@@ -25,19 +25,7 @@ public:
     void moveBullet();
 
 private:
-    bool play;
-
-    float WIDTH=1600;
-    float HEIGHT=1200;
-
-    sf::RenderWindow window;
-    sf::RectangleShape rect;
-    sf::Clock shootClock;
-
-    sf::Color WHITE=sf::Color(255,255,255,255);
-    sf::Color GRAY=sf::Color(24,24,26,255);
-
-//variables du rectangle
+//variables du rectangle/joueur
     float rect_width=100;
     float rect_height=50;
     float rectPosX=WIDTH/2;
@@ -53,6 +41,18 @@ private:
 
     Button button;
     Bullet b1;
+
+    bool play;
+
+    float WIDTH=1600;
+    float HEIGHT=1200;
+
+    sf::RenderWindow window;
+    sf::RectangleShape rect;
+    sf::Clock shootClock;
+
+    sf::Color WHITE=sf::Color(255,255,255,255);
+    sf::Color GRAY=sf::Color(24,24,26,255);
 };
 
 #endif CLASSSHOOTER_H

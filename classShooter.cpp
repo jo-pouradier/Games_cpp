@@ -117,7 +117,7 @@ void Shooter::Shoot(){
     if (button.shoot && shootClock.getElapsedTime().asSeconds()>shootTimer){
         b1.Positioning(rect.getPosition());
         sf::Vector2f mousePosNow=sf::Vector2f(sf::Mouse::getPosition(window));
-        b1.setDir(sf::Vector2f(mousePosNow-rectPosition));
+        b1.setDir(sf::Vector2f(mousePosNow-rect.getPosition()));
         bullets.push_back(Bullet(b1));
         shootClock.restart();
     }
