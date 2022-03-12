@@ -11,6 +11,7 @@
 class Bullet{
 public:
     Bullet();
+    ~Bullet();
     void setDir(sf::Vector2f direction);
     sf::CircleShape getShape();
     sf::Vector2f getVel();
@@ -23,6 +24,7 @@ private:
     sf::CircleShape shape;
     int size=8;
     float speed=20;
+
 };
 
 

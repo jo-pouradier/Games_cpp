@@ -10,6 +10,9 @@ Bullet::Bullet(){
     shape.setRadius(size);
 }
 
+Bullet::~Bullet() {
+}
+
 void Bullet::setDir(sf::Vector2f direction) {
     //normalisation du vecteur direction
     dir=direction/float(sqrt(pow(direction.x,2)+pow(direction.y,2)));
