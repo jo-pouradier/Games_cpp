@@ -18,6 +18,10 @@ Shooter::Shooter(){
     rect.setFillColor(WHITE);
     rect.setPosition(rectPosition);
     rect.setOrigin(rect_width/2, rect_height/2);
+    font.loadFromFile(fontFile);
+    scoreTxt.setFont(font);
+    scoreTxt.setCharacterSize(40);
+    scoreTxt.setFillColor(sf::Color::White);
     play=false;
     pause=false;
 }
@@ -36,13 +40,11 @@ void Shooter::Stop(){
 
 void Shooter::Pause() {
     sf::Text *textPlay, *textQuit;
-    sf::Font *font;
     sf::RectangleShape *buttonPlay, *buttonQuit, *background;
     sf::Vector2f *buttonPlaySize, *buttonQuitSize, *buttonPlayPos, *buttonQuitPos;
 
     textPlay = new sf::Text;
     textQuit= new sf::Text;
-    font = new sf::Font;
     buttonPlay = new sf::RectangleShape;
     buttonQuit = new sf::RectangleShape;
     background = new sf::RectangleShape;
@@ -51,10 +53,8 @@ void Shooter::Pause() {
     buttonPlayPos = new sf::Vector2f;
     buttonQuitPos = new sf::Vector2f;
 
-    font->loadFromFile(fontFile);
-
     textPlay->setString("Play");
-    textPlay->setFont(*font);
+    textPlay->setFont(font);
     textPlay->setPosition(WIDTH/5 + ((WIDTH/5 - textPlay->getGlobalBounds().width)/4), HEIGHT/2);
     textPlay->setFillColor(WhiteG);
     textPlay->setCharacterSize(100);
@@ -66,7 +66,7 @@ void Shooter::Pause() {
     buttonPlay->setFillColor(GrayW);
 
     textQuit->setString("Quit");
-    textQuit->setFont(*font);
+    textQuit->setFont(font);
     textQuit->setPosition(WIDTH*3/5 + ((WIDTH/5 - textQuit->getGlobalBounds().width)/4), HEIGHT/2);
     textQuit->setFillColor(WhiteG);
     textQuit->setCharacterSize(100);
@@ -107,6 +107,7 @@ void Shooter::Running() {
         SpawnEnemy();
         CollisionsEnemy();
         CollisionsWall();
+        UpdateText();
         Drawing();
         window.display();
     } else {
@@ -144,7 +145,14 @@ void Shooter::Drawing(){
     for (auto & enemy : enemies){
         window.draw(enemy->getShape());
     }
+
+    window.draw(scoreTxt);
     window.draw(rect);
+}
+
+void Shooter::UpdateText(){
+    scoreTxt.setString("score: " + std::to_string(score));
+    scoreTxt.setPosition(WIDTH/2 - scoreTxt.getGlobalBounds().width*0.5, 10);
 }
 
 void Shooter::Rotation() {
@@ -234,6 +242,7 @@ void Shooter::CollisionsEnemy() {
                 enemies[k] = nullptr;
                 bullets.erase(bullets.begin() + i);
                 enemies.erase(enemies.begin() + k);
+                score += 10;
                 break;    //NE PAS OUBLIER CE FOUTUE BREAK !!!! la balle peut avoir plusieurs collisions...
             }
         }
@@ -264,13 +273,15 @@ void Shooter::MouseHoverPause(sf::RectangleShape *shape) {
 bool Shooter::MouseHoverClick(sf::RectangleShape *shape) {
     float x = sf::Mouse::getPosition(window).x;
     float y = sf::Mouse::getPosition(window).y;
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-        if (shape->getPosition().x < x && x < (shape->getPosition().x + shape->getSize().x)
-            && (shape->getPosition().y < y) && (y < (shape->getPosition().y + shape->getSize().y))) {
-            return true;
-        }
-        else{
-            return false;
+    if (sf::Event::MouseButtonReleased){
+        std::cout<<"released"<<std::endl;
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (shape->getPosition().x < x && x < (shape->getPosition().x + shape->getSize().x)
+                && (shape->getPosition().y < y) && (y < (shape->getPosition().y + shape->getSize().y))) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

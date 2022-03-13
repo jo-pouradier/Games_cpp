@@ -23,6 +23,7 @@ public:
     void Input(sf::Event event);
     void Mouvement();
     void Drawing();
+    void UpdateText();
     void Shoot();
     void SpawnEnemy();
     void CollisionsEnemy();
@@ -41,6 +42,8 @@ private:
     sf::Color const GrayD = sf::Color(24,24,26,255);
     sf::Color const WHITE=sf::Color(255,255,255,255);
     sf::Color const BlackPause = sf::Color(10,10,10,180);
+    sf::Font font;
+    sf::Text scoreTxt;
     std::string fontFile= "arial.ttf";
 //variables du rectangle/joueur
     float rect_width=100;
@@ -52,6 +55,7 @@ private:
     float newTheta=0;
     float shootTimer=0.01; //change
     float enemySpawn = 0.1; //change
+    int score = 0;
     sf::Vector2f rectSize;
     sf::Vector2f rectPosition;
     std::vector<Bullet*> bullets;
