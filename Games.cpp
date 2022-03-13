@@ -87,7 +87,6 @@ int main(){
                     break;
                 case (sf::Event::MouseButtonPressed):
                     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-                        std::cout<<textSnakePosition.y<<std::endl;
                         if (textSnakePosition.y<mPosition.y && mPosition.y<textSnakePosition.y+40){
                             GameSnake.Play();
                         }

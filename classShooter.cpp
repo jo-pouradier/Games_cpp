@@ -35,57 +35,69 @@ void Shooter::Stop(){
 }
 
 void Shooter::Pause() {
-    sf::Text *textPause, *textQuit;
+    sf::Text *textPlay, *textQuit;
     sf::Font *font;
-    sf::RectangleShape *buttonPause, *buttonQuit, *background;
-    sf::Vector2f *buttonPauseSize, *buttonQuitSize, *buttonPausePos, *buttonQuitPos;
+    sf::RectangleShape *buttonPlay, *buttonQuit, *background;
+    sf::Vector2f *buttonPlaySize, *buttonQuitSize, *buttonPlayPos, *buttonQuitPos;
 
-    textPause = new sf::Text;
+    textPlay = new sf::Text;
     textQuit= new sf::Text;
     font = new sf::Font;
-    buttonPause = new sf::RectangleShape;
+    buttonPlay = new sf::RectangleShape;
     buttonQuit = new sf::RectangleShape;
     background = new sf::RectangleShape;
-    buttonPauseSize = new sf::Vector2f;
+    buttonPlaySize = new sf::Vector2f;
     buttonQuitSize = new sf::Vector2f;
-    buttonPausePos = new sf::Vector2f;
+    buttonPlayPos = new sf::Vector2f;
     buttonQuitPos = new sf::Vector2f;
 
-    textPause->setString("Play");
-    textQuit->setString("Quit");
     font->loadFromFile(fontFile);
-    textPause->setFont(*font);
-    textQuit->setFont(*font);
-    textPause->setPosition(WIDTH/5, HEIGHT/2);
-    textQuit->setPosition(WIDTH*3/5, HEIGHT/2);
-    textPause->setFillColor(WhiteG);
-    textQuit->setFillColor(WhiteG);
-    textPause->setCharacterSize(100);
-    textQuit->setCharacterSize(100);
 
-    *buttonPauseSize = sf::Vector2f (WIDTH/5, textPause->getCharacterSize());
+    textPlay->setString("Play");
+    textPlay->setFont(*font);
+    textPlay->setPosition(WIDTH/5 + ((WIDTH/5 - textPlay->getGlobalBounds().width)/4), HEIGHT/2);
+    textPlay->setFillColor(WhiteG);
+    textPlay->setCharacterSize(100);
+    *buttonPlaySize = sf::Vector2f (WIDTH/5, textPlay->getCharacterSize());
+    *buttonPlayPos = sf::Vector2f (textPlay->getGlobalBounds().left - textPlay->getGlobalBounds().width*0.5 + 20, //jsp pk ce +20...
+                                   textPlay->getGlobalBounds().top - textPlay->getGlobalBounds().height*0.125);
+    buttonPlay->setSize(*buttonPlaySize);
+    buttonPlay->setPosition(*buttonPlayPos);
+    buttonPlay->setFillColor(GrayW);
+
+    textQuit->setString("Quit");
+    textQuit->setFont(*font);
+    textQuit->setPosition(WIDTH*3/5 + ((WIDTH/5 - textQuit->getGlobalBounds().width)/4), HEIGHT/2);
+    textQuit->setFillColor(WhiteG);
+    textQuit->setCharacterSize(100);
     *buttonQuitSize = sf::Vector2f (WIDTH/5, textQuit->getCharacterSize());
-    *buttonPausePos = sf::Vector2f (textPause->getPosition().x, textPause->getPosition().y);
-    *buttonQuitPos = sf::Vector2f (textQuit->getPosition().x, textQuit->getPosition().y);
-    buttonPause->setSize(*buttonPauseSize);
+    *buttonQuitPos = sf::Vector2f (textQuit->getGlobalBounds().left - textQuit->getGlobalBounds().width*0.5 + 20, //jsp pk ce +20...
+                                   textQuit->getGlobalBounds().top - textQuit->getGlobalBounds().height*0.125);
     buttonQuit->setSize(*buttonQuitSize);
-    buttonPause->setPosition(*buttonPausePos);
     buttonQuit->setPosition(*buttonQuitPos);
-    buttonPause->setFillColor(GrayW);
     buttonQuit->setFillColor(GrayW);
-    background->setFillColor(GrayPause);
+
+    background->setSize(sf::Vector2f (WIDTH,HEIGHT));
+    background->setPosition(sf::Vector2f (0,0));
+    background->setFillColor(BlackPause);
+
+    MouseHoverPause(buttonPlay);
+    MouseHoverPause(buttonQuit);
+
+    if (MouseHoverClick(buttonQuit)) Stop();
+    if (MouseHoverClick(buttonPlay)) pause = false;
 
     Drawing();
 
     window.draw(*background);
     window.draw(*buttonQuit);
-    window.draw(*buttonPause);
+    window.draw(*buttonPlay);
     window.draw(*textQuit);
-    window.draw(*textPause);
+    window.draw(*textPlay);
     window.display();
 }
 
-void Shooter::Running(){
+void Shooter::Running() {
     sf::Event event{};
     while (window.pollEvent(event)) Input(event);
     if (not pause) {
@@ -97,8 +109,7 @@ void Shooter::Running(){
         CollisionsWall();
         Drawing();
         window.display();
-    }
-    else{
+    } else {
         Pause();
     }
 }
@@ -236,6 +247,30 @@ void Shooter::CollisionsWall(){
             delete bullets[i];
             bullets[i] = nullptr;
             bullets.erase(bullets.begin()+i);
+        }
+    }
+}
+
+void Shooter::MouseHoverPause(sf::RectangleShape *shape) {
+    float x = sf::Mouse::getPosition(window).x;
+    float y = sf::Mouse::getPosition(window).y;
+    if (shape->getPosition().x < x && x < (shape->getPosition().x + shape->getSize().x)
+        && (shape->getPosition().y < y) && (y < (shape->getPosition().y + shape->getSize().y))){
+        shape->setFillColor(WhiteG);
+        std::cout<<"hover"<<std::endl;
+    }
+}
+
+bool Shooter::MouseHoverClick(sf::RectangleShape *shape) {
+    float x = sf::Mouse::getPosition(window).x;
+    float y = sf::Mouse::getPosition(window).y;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+        if (shape->getPosition().x < x && x < (shape->getPosition().x + shape->getSize().x)
+            && (shape->getPosition().y < y) && (y < (shape->getPosition().y + shape->getSize().y))) {
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

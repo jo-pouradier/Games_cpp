@@ -27,6 +27,8 @@ public:
     void SpawnEnemy();
     void CollisionsEnemy();
     void CollisionsWall();
+    void MouseHoverPause(sf::RectangleShape *shape);
+    bool MouseHoverClick(sf::RectangleShape *shape);
 
 private:
     float WIDTH=1600;
@@ -38,7 +40,7 @@ private:
     sf::Color const GrayW = sf::Color(70,70,73,255);
     sf::Color const GrayD = sf::Color(24,24,26,255);
     sf::Color const WHITE=sf::Color(255,255,255,255);
-    sf::Color const GrayPause = sf::Color(24,24,26,150);
+    sf::Color const BlackPause = sf::Color(10,10,10,180);
     std::string fontFile= "arial.ttf";
 //variables du rectangle/joueur
     float rect_width=100;
