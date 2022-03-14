@@ -162,7 +162,6 @@ void Pong::Stop()
     window.close();
 }
 
-
 string Pong::getName()
 {
     return name;

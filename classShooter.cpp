@@ -22,8 +22,11 @@ Shooter::Shooter(){
     scoreTxt.setFont(font);
     scoreTxt.setCharacterSize(40);
     scoreTxt.setFillColor(sf::Color::White);
+    nbrEnemyTxt.setFont(font);
+    nbrEnemyTxt.setCharacterSize(40);
+    nbrEnemyTxt.setFillColor(sf::Color::White);
     play=false;
-    pause=false;
+    pause=true;
 }
 
 void Shooter::Play(){
@@ -98,7 +101,6 @@ void Shooter::Pause() {
 }
 
 void Shooter::Running() {
-    sf::Event event{};
     while (window.pollEvent(event)) Input(event);
     if (not pause) {
         Mouvement();
@@ -147,35 +149,35 @@ void Shooter::Drawing(){
     }
 
     window.draw(scoreTxt);
+    window.draw(nbrEnemyTxt);
     window.draw(rect);
 }
 
 void Shooter::UpdateText(){
     scoreTxt.setString("score: " + std::to_string(score));
     scoreTxt.setPosition(WIDTH/2 - scoreTxt.getGlobalBounds().width*0.5, 10);
+    nbrEnemyTxt.setString("nbr Eenemy: " + std::to_string(enemies.size()));
+    nbrEnemyTxt.setPosition(WIDTH- nbrEnemyTxt.getGlobalBounds().width,10);
 }
 
 void Shooter::Rotation() {
-    if (sf::Event::MouseMoved) {
-        float newPosX(rect.getPosition().x);
-        float newPosY(rect.getPosition().y);
-        float mousePosX(sf::Mouse::getPosition(window).x);
-        float mousePosY(sf::Mouse::getPosition(window).y);
-        //On met Mouse et rect dans les memes "axes" de rotation d'où le +90 et +360
-        if (mousePosX > newPosX) newTheta = 90.f + atan2(mousePosY - newPosY, mousePosX - newPosX) * (180 / 3.14);
-        if (mousePosX <= newPosX) newTheta = 360.0 - atan2(newPosX - mousePosX, newPosY - mousePosY) * (180 / 3.14);
-
-        rect.rotate(newTheta - rect.getRotation());
-    }
+    float newPosX(rect.getPosition().x);
+    float newPosY(rect.getPosition().y);
+    float mousePosX(sf::Mouse::getPosition(window).x);
+    float mousePosY(sf::Mouse::getPosition(
+            window).y);//On met Mouse et rect dans les memes "axes" de rotation d'où le +90 et +360
+    if (mousePosX > newPosX) newTheta = 90.f + atan2(mousePosY - newPosY, mousePosX - newPosX) * (180 / 3.14);
+    if (mousePosX <= newPosX) newTheta = 360.0 - atan2(newPosX - mousePosX, newPosY - mousePosY) * (180 / 3.14);
+    rect.rotate(newTheta - rect.getRotation());
 }
 
 void Shooter::Input(sf::Event event) {
     char touche(event.key.code);
     switch (event.type) {
-        case (sf::Event::Closed):
+        case (event.Closed):
             Stop();
             break;
-        case sf::Event::KeyPressed:
+        case event.KeyPressed:
             if (touche == sf::Keyboard::Z)
                 button.up=true;
             if (touche == sf::Keyboard::S)
@@ -185,7 +187,7 @@ void Shooter::Input(sf::Event event) {
             if (touche == sf::Keyboard::Q)
                 button.left=true;
             break;
-        case sf::Event::KeyReleased:
+        case event.KeyReleased:
             if (touche==sf::Keyboard::Escape)
                 Stop();
             if (touche == sf::Keyboard::Z)
@@ -197,16 +199,18 @@ void Shooter::Input(sf::Event event) {
             if (touche == sf::Keyboard::Q)
                 button.left=false;
             if (touche==sf::Keyboard::P)
-                if (!pause)
+                if (!pause){
                     pause = true;
-                else{
+                }
+                else {
                     pause = false;
                 }
             break;
-        case sf::Event::MouseButtonPressed:
+        case event.MouseButtonPressed:
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) button.shoot=true;
             break;
-        case sf::Event::MouseButtonReleased:
+
+        case event.MouseButtonReleased:
             if (not sf::Mouse::isButtonPressed(sf::Mouse::Left)) button.shoot=false;
             break;
     }
@@ -261,23 +265,15 @@ void Shooter::CollisionsWall(){
 }
 
 void Shooter::MouseHoverPause(sf::RectangleShape *shape) {
-    float x = sf::Mouse::getPosition(window).x;
-    float y = sf::Mouse::getPosition(window).y;
-    if (shape->getPosition().x < x && x < (shape->getPosition().x + shape->getSize().x)
-        && (shape->getPosition().y < y) && (y < (shape->getPosition().y + shape->getSize().y))){
+    if (shape->getGlobalBounds().contains(sf::Vector2f (sf::Mouse::getPosition(window)))){
         shape->setFillColor(WhiteG);
-        std::cout<<"hover"<<std::endl;
     }
 }
 
 bool Shooter::MouseHoverClick(sf::RectangleShape *shape) {
-    float x = sf::Mouse::getPosition(window).x;
-    float y = sf::Mouse::getPosition(window).y;
-    if (sf::Event::MouseButtonReleased){
-        std::cout<<"released"<<std::endl;
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (shape->getPosition().x < x && x < (shape->getPosition().x + shape->getSize().x)
-                && (shape->getPosition().y < y) && (y < (shape->getPosition().y + shape->getSize().y))) {
+    if (event.MouseButtonReleased){
+        if (event.mouseButton.button==sf::Mouse::Left) {
+            if (shape->getGlobalBounds().contains(sf::Vector2f (sf::Mouse::getPosition(window)))) {
                 return true;
             } else {
                 return false;
