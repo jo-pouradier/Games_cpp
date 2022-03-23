@@ -180,9 +180,9 @@ void Pong::getKey(sf::Event event)
             button.up = true;
         if (touche == sf::Keyboard::Down)
             button.down = true;
-        if (touche == sf::Keyboard::Right)
+        if (touche == sf::Keyboard::S)
             button.right = true;
-        if (touche == sf::Keyboard::Left)
+        if (touche == sf::Keyboard::Z)
             button.left = true;
         if (touche == sf::Keyboard::C)
         {
@@ -200,9 +200,9 @@ void Pong::getKey(sf::Event event)
             button.up = false;
         if (touche == sf::Keyboard::Down)
             button.down = false;
-        if (touche == sf::Keyboard::Right)
+        if (touche == sf::Keyboard::S)
             button.right = false;
-        if (touche == sf::Keyboard::Left)
+        if (touche == sf::Keyboard::Z)
             button.left = false;
         break;
     default:

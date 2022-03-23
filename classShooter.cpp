@@ -3,6 +3,7 @@
 //
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <cmath>
 #include <iostream>
 #include "classShooter.h"
@@ -25,6 +26,9 @@ Shooter::Shooter(){
     nbrEnemyTxt.setFont(font);
     nbrEnemyTxt.setCharacterSize(40);
     nbrEnemyTxt.setFillColor(sf::Color::White);
+    music.openFromFile(musicFile);
+    music.setLoop(true);
+    event={};
     play=false;
     pause=true;
 }
@@ -33,6 +37,8 @@ void Shooter::Play(){
     play=true;
     window.create(sf::VideoMode(WIDTH,HEIGHT,32),"SFML Snakes");
     window.setFramerateLimit(80);
+    music.play();
+    music.pause();
     while (play) Running();
 }
 
@@ -61,7 +67,7 @@ void Shooter::Pause() {
     textPlay->setPosition(WIDTH/5 + ((WIDTH/5 - textPlay->getGlobalBounds().width)/4), HEIGHT/2);
     textPlay->setFillColor(WhiteG);
     textPlay->setCharacterSize(100);
-    *buttonPlaySize = sf::Vector2f (WIDTH/5, textPlay->getCharacterSize());
+    *buttonPlaySize = sf::Vector2f (WIDTH/5, textPlay->getCharacterSize()+10);
     *buttonPlayPos = sf::Vector2f (textPlay->getGlobalBounds().left - textPlay->getGlobalBounds().width*0.5 + 20, //jsp pk ce +20...
                                    textPlay->getGlobalBounds().top - textPlay->getGlobalBounds().height*0.125);
     buttonPlay->setSize(*buttonPlaySize);
@@ -73,7 +79,7 @@ void Shooter::Pause() {
     textQuit->setPosition(WIDTH*3/5 + ((WIDTH/5 - textQuit->getGlobalBounds().width)/4), HEIGHT/2);
     textQuit->setFillColor(WhiteG);
     textQuit->setCharacterSize(100);
-    *buttonQuitSize = sf::Vector2f (WIDTH/5, textQuit->getCharacterSize());
+    *buttonQuitSize = sf::Vector2f (WIDTH/5, textQuit->getCharacterSize()+10);
     *buttonQuitPos = sf::Vector2f (textQuit->getGlobalBounds().left - textQuit->getGlobalBounds().width*0.5 + 20, //jsp pk ce +20...
                                    textQuit->getGlobalBounds().top - textQuit->getGlobalBounds().height*0.125);
     buttonQuit->setSize(*buttonQuitSize);
@@ -101,7 +107,7 @@ void Shooter::Pause() {
 }
 
 void Shooter::Running() {
-    while (window.pollEvent(event)) Input(event);
+    while (window.pollEvent(event)) Input();
     if (not pause) {
         Mouvement();
         Shoot();
@@ -156,28 +162,28 @@ void Shooter::Drawing(){
 void Shooter::UpdateText(){
     scoreTxt.setString("score: " + std::to_string(score));
     scoreTxt.setPosition(WIDTH/2 - scoreTxt.getGlobalBounds().width*0.5, 10);
-    nbrEnemyTxt.setString("nbr Eenemy: " + std::to_string(enemies.size()));
-    nbrEnemyTxt.setPosition(WIDTH- nbrEnemyTxt.getGlobalBounds().width,10);
+    nbrEnemyTxt.setString("nbr Enemy: " + std::to_string(enemies.size()));
+    nbrEnemyTxt.setPosition(WIDTH- nbrEnemyTxt.getGlobalBounds().width - 5,10);
 }
 
 void Shooter::Rotation() {
     float newPosX(rect.getPosition().x);
     float newPosY(rect.getPosition().y);
     float mousePosX(sf::Mouse::getPosition(window).x);
-    float mousePosY(sf::Mouse::getPosition(
-            window).y);//On met Mouse et rect dans les memes "axes" de rotation d'où le +90 et +360
+    float mousePosY(sf::Mouse::getPosition(window).y);
+    //On met Mouse et rect dans les memes "axes" de rotation d'où le +90 et +360
     if (mousePosX > newPosX) newTheta = 90.f + atan2(mousePosY - newPosY, mousePosX - newPosX) * (180 / 3.14);
     if (mousePosX <= newPosX) newTheta = 360.0 - atan2(newPosX - mousePosX, newPosY - mousePosY) * (180 / 3.14);
     rect.rotate(newTheta - rect.getRotation());
 }
 
-void Shooter::Input(sf::Event event) {
+void Shooter::Input() {
     char touche(event.key.code);
     switch (event.type) {
-        case (event.Closed):
+        case (sf::Event::Closed):
             Stop();
             break;
-        case event.KeyPressed:
+        case sf::Event::KeyPressed:
             if (touche == sf::Keyboard::Z)
                 button.up=true;
             if (touche == sf::Keyboard::S)
@@ -187,7 +193,7 @@ void Shooter::Input(sf::Event event) {
             if (touche == sf::Keyboard::Q)
                 button.left=true;
             break;
-        case event.KeyReleased:
+        case sf::Event::KeyReleased:
             if (touche==sf::Keyboard::Escape)
                 Stop();
             if (touche == sf::Keyboard::Z)
@@ -198,19 +204,15 @@ void Shooter::Input(sf::Event event) {
                 button.right=false;
             if (touche == sf::Keyboard::Q)
                 button.left=false;
-            if (touche==sf::Keyboard::P)
-                if (!pause){
-                    pause = true;
-                }
-                else {
-                    pause = false;
-                }
+            if (touche==sf::Keyboard::P){
+                pause = !pause;
+                PauseMusic();
+            }
             break;
-        case event.MouseButtonPressed:
+        case sf::Event::MouseButtonPressed:
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) button.shoot=true;
             break;
-
-        case event.MouseButtonReleased:
+        case sf::Event::MouseButtonReleased:
             if (not sf::Mouse::isButtonPressed(sf::Mouse::Left)) button.shoot=false;
             break;
     }
@@ -230,7 +232,7 @@ void Shooter::Shoot(){
 void Shooter::SpawnEnemy() {
     if (enemyClock.getElapsedTime().asSeconds()>enemySpawn) {
         e1 = new Enemy;
-        e1->setDir(float(WIDTH), float(HEIGHT));
+        e1->setDir(WIDTH, HEIGHT);
         enemies.emplace_back(e1);
         enemyClock.restart();
     }
@@ -275,9 +277,23 @@ bool Shooter::MouseHoverClick(sf::RectangleShape *shape) {
         if (event.mouseButton.button==sf::Mouse::Left) {
             if (shape->getGlobalBounds().contains(sf::Vector2f (sf::Mouse::getPosition(window)))) {
                 return true;
-            } else {
-                return false;
             }
         }
+    return false;
     }
+}
+
+void Shooter::PauseMusic(){
+    switch (music.getStatus()) {
+        case sf::Sound::Paused:
+            music.play();
+            break;
+        case sf::Sound::Playing:
+            music.pause();
+            break;
+    }
+}
+
+std::string Shooter::getName(){
+    return name;
 }

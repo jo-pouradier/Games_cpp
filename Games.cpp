@@ -6,6 +6,7 @@
 
 Pong GamePong;
 Snakes GameSnake;
+Shooter GameShooter;
 
 int const WIN_WIDTH=200, WIN_HEIGHT=200;
 sf::Color const WhiteG(200,200,201,255);
@@ -13,13 +14,13 @@ sf::Color const GrayW(70,70,73,255);
 sf::Color const GrayD (24,24,26,255);
 
 sf::RenderWindow window;
-sf::Text textPong,textSnake;
+sf::Text textPong,textSnake,textShooter;
 sf::Font font;
-sf::RectangleShape RectPong,RectSnake;
+sf::RectangleShape RectPong,RectSnake,RectShooter;
 sf::Vector2f RectSize;
 sf::Mouse mouse;
 sf::Vector2i mPosition;
-sf::Vector2f textPongPosition,textSnakePosition;
+sf::Vector2f textPongPosition,textSnakePosition,textShooterPosition;
 
 std::string fontFile("arial.ttf");
 
@@ -41,6 +42,14 @@ void mouseHover(sf::Vector2i mPosition){
         RectPong.setFillColor(GrayW);
         textPong.setFillColor(WhiteG);
     }
+    if ((textShooterPosition.y)<mPosition.y && mPosition.y<(textShooterPosition.y+40)){
+        RectShooter.setFillColor(WhiteG);
+        textShooter.setFillColor(GrayW);
+    }
+    else{
+        RectShooter.setFillColor(GrayW);
+        textShooter.setFillColor(WhiteG);
+    }
 }
 
 int main(){
@@ -55,21 +64,33 @@ int main(){
     textPong.setPosition(textPongPosition);
     textPong.setFont(font);
     textPong.setFillColor(WhiteG);
-//    textPong.setOutlineColor(sf::Color::Red);     // c'est la bordure de chaque lettre (tres moche)
-//    textPong.setOutlineThickness(3);
+
     textSnakePosition.x=(40),textSnakePosition.y=100;
     textSnake.setString(GameSnake.getName());
     textSnake.setPosition(textSnakePosition);
     textSnake.setFont(font);
     textSnake.setFillColor(WhiteG);
 
-    RectSize.x=WIN_WIDTH;RectSize.y=40;
+    textShooterPosition.x=(40),textShooterPosition.y=150;
+    textShooter.setString(GameShooter.getName());
+    textShooter.setPosition(textShooterPosition);
+    textShooter.setFont(font);
+    textShooter.setFillColor(WhiteG);
+
+    RectSize.x=WIN_WIDTH;
+    RectSize.y=40;
+
     RectPong.setSize(RectSize);
-    RectSnake.setSize(RectSize);
     RectPong.setFillColor(GrayW);
-    RectSnake.setFillColor(GrayW);
     RectPong.setPosition(0,textPongPosition.y);
+
+    RectSnake.setSize(RectSize);
+    RectSnake.setFillColor(GrayW);
     RectSnake.setPosition(0,textSnakePosition.y);
+
+    RectShooter.setSize(RectSize);
+    RectShooter.setFillColor(GrayW);
+    RectShooter.setPosition(0,textShooterPosition.y);
 
     while(window.isOpen()){
         sf::Event event{};
@@ -93,6 +114,9 @@ int main(){
                         if ((textPongPosition.y)<mPosition.y && mPosition.y<(textPongPosition.y+40)){
                             GamePong.Play();
                         }
+                        if ((textShooterPosition.y)<mPosition.y && mPosition.y<(textShooterPosition.y+40)){
+                            GameShooter.Play();
+                        }
                     }
                     break;
                 default:
@@ -101,9 +125,13 @@ int main(){
         }
         window.clear(GrayD);
         window.draw(RectSnake);
-        window.draw(RectPong);
         window.draw(textSnake);
+
+        window.draw(RectPong);
         window.draw(textPong);
+
+        window.draw(RectShooter);
+        window.draw(textShooter);
 
         window.display();
     }
