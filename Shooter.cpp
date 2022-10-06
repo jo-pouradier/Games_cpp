@@ -1,8 +1,7 @@
-#include "classShooter.h"
-
+#include "header/classShooter.h"
 
 int main(){
-    Shooter shooter;
-    shooter.Play();
-
+    Shooter *shooter = new Shooter();
+    shooter->Play();
+    return 0;
 }

@@ -1,8 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "classSnake.h"
-#include "classPong.h"
-#include "classShooter.h"
+#include "header/classSnakes.h"
+#include "header/classPong.h"
+#include "header/classShooter.h"
 
 Pong GamePong;
 Snakes GameSnake;
@@ -22,7 +22,7 @@ sf::Mouse mouse;
 sf::Vector2i mPosition;
 sf::Vector2f textPongPosition,textSnakePosition,textShooterPosition;
 
-std::string fontFile("arial.ttf");
+std::string fontFile("sources/arial.ttf");
 
 
 void mouseHover(sf::Vector2i mPosition){
@@ -54,7 +54,7 @@ void mouseHover(sf::Vector2i mPosition){
 
 int main(){
 
-    window.create (VideoMode(WIN_WIDTH,WIN_HEIGHT,32),"Games");
+    window.create (sf::VideoMode(WIN_WIDTH,WIN_HEIGHT,32),"Games");
     window.setFramerateLimit(30);
 
     font.loadFromFile(fontFile);
@@ -93,7 +93,7 @@ int main(){
     RectShooter.setPosition(0,textShooterPosition.y);
 
     while(window.isOpen()){
-        sf::Event event{};
+        sf::Event event;
         mPosition = sf::Mouse::getPosition(window);
         mouseHover(mPosition);
         while (window.pollEvent(event)){

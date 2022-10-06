@@ -1,7 +1,7 @@
-#include "classSnake.h"
+#include "header/classSnakes.h"
 
 int main(){
-    Snakes snakes;
-    snakes.Play();
+    Snakes game;
+    game.Play();
     return 0;
 }

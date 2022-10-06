@@ -1,15 +1,15 @@
 //
 // Created by Joseph Pouradier duteil on 22/02/2022.
 //
-#include "classPong.h"
+#include "header/classPong.h"
 #include <iostream>
 
 Pong::Pong()
 {
     // creation des raquettes
-    raquetteRight.setSize(Vector2f(rWidth, rHeight));
+    raquetteRight.setSize(sf::Vector2f(rWidth, rHeight));
     raquetteRight.setPosition(posRRightX, posRRightY);
-    raquetteLeft.setSize(Vector2f(rWidth, rHeight));
+    raquetteLeft.setSize(sf::Vector2f(rWidth, rHeight));
     raquetteLeft.setPosition(posRLeftX, posRLeftY);
     // creation de la balle
     Balle.setRadius(15);
@@ -19,7 +19,7 @@ Pong::Pong()
     txt.setString(to_string(scoreJ1) + " | " + to_string(scoreJ2));
     txt.setFont(font);
     txt.setCharacterSize(35);
-    txt.setFillColor(Color::White);
+    txt.setFillColor(sf::Color::White);
     txt.setPosition((WIN_WIDTH / 2) - 40, 10);
 }
 
@@ -27,16 +27,14 @@ void Pong::Play()
 {
     SetWindow();
     play = true;
-    while (play)
-        Running();
+    while (play) {Running();};
 }
 
 void Pong::Running()
 {
-    sf::Event event{}; // variables des evenements
+    sf::Event event; // variables des evenements
 
-    while (window.pollEvent(event))
-        getKey(event);
+    while (window.pollEvent(event)) getKey(event);
     // gestion du clavier
     CheckBtn();
     // on repositionne les raquettes
@@ -51,7 +49,7 @@ void Pong::Running()
 
 void Pong::SetWindow()
 {
-    window.create(VideoMode(WIN_WIDTH, WIN_HEIGHT, 32), "Pong SFML");
+    window.create(sf::VideoMode(WIN_WIDTH, WIN_HEIGHT, 32), "Pong SFML");
     window.setFramerateLimit(80);
 }
 
@@ -61,10 +59,10 @@ void Pong::UpdateBall()
     posBY += bDir.y * bSpeed;
 
     // collision avec la raquette droite ou gauche, prendre en compte la hauteur de la balle
-    if (posBX < posRLeftX + rWidth && posBX > posRLeftX &&
-            posBY + 15 > posRLeftY && posBY + 15 < posRLeftY + rHeight ||
-        posBX + 15 > posRRightX && posBX + 15 < posRRightX + rWidth &&
-            posBY > posRRightY && posBY + 15 < posRRightY + rHeight)
+    if (((posBX < posRLeftX + rWidth) && (posBX > posRLeftX) &&
+            (posBY + 15 > posRLeftY) && (posBY + 15 < posRLeftY + rHeight)) ||
+        ((posBX + 15 > posRRightX) && (posBX + 15 < posRRightX + rWidth) &&
+            (posBY > posRRightY) && (posBY + 15 < posRRightY + rHeight)))
     {
         bDir.x *= -1; // symétrie par rapport a Y
     }
@@ -142,7 +140,7 @@ void Pong::UpdateGame()
 {
     // on dessine enfin nos element
     txt.setString(to_string(scoreJ1) + " | " + to_string(scoreJ2));
-    window.clear(Color::Black);
+    window.clear(sf::Color::Black);
     window.draw(txt);
     window.draw(raquetteRight);
     window.draw(raquetteLeft);
@@ -169,16 +167,16 @@ string Pong::getName()
 
 void Pong::getKey(sf::Event event)
 {
-    if (event.type == Event::Closed)
+    if (event.type == sf::Event::Closed)
         Stop();
     char touche = event.key.code;
 
     switch (event.type)
     {
-    case (Event::KeyPressed):
-        if (touche == sf::Keyboard::Up)
+    case (sf::Event::KeyPressed):
+        if (touche == sf::Keyboard::P)
             button.up = true;
-        if (touche == sf::Keyboard::Down)
+        if (touche == sf::Keyboard::M)
             button.down = true;
         if (touche == sf::Keyboard::S)
             button.right = true;
@@ -193,12 +191,12 @@ void Pong::getKey(sf::Event event)
         }
         break;
 
-    case (Event::KeyReleased):
+    case (sf::Event::KeyReleased):
         if (touche == sf::Keyboard::Escape)
             Stop();
-        if (touche == sf::Keyboard::Up)
+        if (touche == sf::Keyboard::P)
             button.up = false;
-        if (touche == sf::Keyboard::Down)
+        if (touche == sf::Keyboard::M)
             button.down = false;
         if (touche == sf::Keyboard::S)
             button.right = false;

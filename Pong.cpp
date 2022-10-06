@@ -1,8 +1,7 @@
-#include "classPong.h"
+#include "header/classPong.h"
 
 int main(){
-
-    Pong game;
-    game.Play();
+    Pong *game = new Pong;
+    game->Play();
     return 0;
 }

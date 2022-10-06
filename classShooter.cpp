@@ -6,9 +6,9 @@
 #include <SFML/Audio.hpp>
 #include <cmath>
 #include <iostream>
-#include "classShooter.h"
-#include "classBullet.h"
-#include "classEnemy.h"
+#include "header/classShooter.h"
+#include "header/classBullet.h"
+#include "header/classEnemy.h"
 
 Shooter::Shooter(){
     rectSize.x= rect_width;
@@ -19,6 +19,7 @@ Shooter::Shooter(){
     rect.setFillColor(WHITE);
     rect.setPosition(rectPosition);
     rect.setOrigin(rect_width/2, rect_height/2);
+
     font.loadFromFile(fontFile);
     scoreTxt.setFont(font);
     scoreTxt.setCharacterSize(40);
@@ -26,9 +27,12 @@ Shooter::Shooter(){
     nbrEnemyTxt.setFont(font);
     nbrEnemyTxt.setCharacterSize(40);
     nbrEnemyTxt.setFillColor(sf::Color::White);
+
     music.openFromFile(musicFile);
     music.setLoop(true);
+
     event={};
+
     play=false;
     pause=true;
 }
@@ -113,8 +117,10 @@ void Shooter::Running() {
         Shoot();
         Rotation();
         SpawnEnemy();
+        SpawnBonus();
         CollisionsEnemy();
         CollisionsWall();
+        CollisionsBonus();
         UpdateText();
         Drawing();
         window.display();
@@ -124,15 +130,18 @@ void Shooter::Running() {
 }
 
 void Shooter::Mouvement(){
-    if (button.right) dx=3;
-    if (button.left) dx=-3;
-    if (button.up) dy=-3;
-    if (button.down) dy=3;
+    if (button.right) dx=playerSpeed;
+    if (button.left) dx=-playerSpeed;
+    if (button.up) dy=-playerSpeed;
+    if (button.down) dy=playerSpeed;
     if (not button.right && not button.left) dx=0;
     if (not button.up && not button.down) dy=0;
     //Collisions avec les bords de la fenêtre
-    if (rect.getPosition().x>WIDTH-50 || rect.getPosition().x< 50) dx=0;
-    if (rect.getPosition().y>=HEIGHT-25 || rect.getPosition().y< 25) dy=0;
+    if (rect.getPosition().x>WIDTH-50 ) dx = -1;
+    if (rect.getPosition().x< 50) dx = 1;
+    if (rect.getPosition().y>HEIGHT-25) dy = -1;
+    if (rect.getPosition().y< 25) dy = 1;
+
     rect.move(dx,dy);
 
     for (auto & bullet : bullets) {
@@ -149,6 +158,9 @@ void Shooter::Drawing(){
 
     for (auto & bullet : bullets){
         window.draw(bullet->getShape());
+    }
+    for (auto & bonus : bonuses){
+        window.draw(bonus -> getShape());
     }
     for (auto & enemy : enemies){
         window.draw(enemy->getShape());
@@ -230,7 +242,7 @@ void Shooter::Shoot(){
 }
 
 void Shooter::SpawnEnemy() {
-    if (enemyClock.getElapsedTime().asSeconds()>enemySpawn) {
+    if (enemyClock.getElapsedTime().asSeconds()>enemyTimer) {
         e1 = new Enemy;
         e1->setDir(WIDTH, HEIGHT);
         enemies.emplace_back(e1);
@@ -297,3 +309,38 @@ void Shooter::PauseMusic(){
 std::string Shooter::getName(){
     return name;
 }
+
+void Shooter::SpawnBonus() {
+    if (bonusClock.getElapsedTime().asSeconds()>bonusTimer) {
+        int bonusInd = rand() % 4; //nombre de couleurs / bonus different, à voir s'il faut vraiment le mettre là
+        bo1 = new Bonus(bonusInd);
+        bo1->setRandPosition(WIDTH, HEIGHT);
+        bonuses.emplace_back(bo1);
+        bonusClock.restart();
+    }
+}
+
+void Shooter::CollisionsBonus() {
+    for (int i; i < bonuses.size(); i++){
+        if (bonuses[i]->getShape().getGlobalBounds().intersects(rect.getGlobalBounds())){
+            switch (bonuses[i]->getBonusInd()) {
+                case 0:
+                    if (shootTimer>0.01) shootTimer *= 0.8;
+                    break;
+                case 1:
+                    if (enemyTimer<1) enemyTimer *= 1.5;
+                    break;
+                case 2:
+                    score += 1000;
+                    break;
+                case 3:
+                    if (playerSpeed<30) playerSpeed *= 1.2;
+
+            }
+            delete bonuses[i];
+            bonuses[i] = nullptr;
+            bonuses.erase(bonuses.begin() +i);
+        }
+    }
+}
+

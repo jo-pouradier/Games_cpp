@@ -2,7 +2,7 @@
 // Created by Joseph Pouradier duteil on 09/03/2022.
 //
 #include <SFML/Graphics.hpp>
-#include "classBullet.h"
+#include "header/classBullet.h"
 #include <cmath>
 
 Bullet::Bullet(){

@@ -2,7 +2,7 @@
 // Created by Joseph Pouradier duteil on 11/03/2022.
 //
 
-#include "classEnemy.h"
+#include "header/classEnemy.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <cmath>
@@ -17,7 +17,7 @@ Enemy::Enemy() {
 
 void Enemy::setDir(int WIDTH, int HEIGHT) {
     float height, width;
-    int RLHL= rand() % 4; // R=0 ; L=1
+    int RLHL= rand() % 4;
     height = (float) rand()/RAND_MAX;
     width = (float) rand()/RAND_MAX;
     switch (RLHL) {
@@ -36,10 +36,9 @@ void Enemy::setDir(int WIDTH, int HEIGHT) {
 }
 
 void Enemy::enemyMoving(sf::Vector2f rectPos) {
-    dir = sf::Vector2f(rectPos-shape.getPosition()); // shape.getPosition()-rectPos
+    dir = sf::Vector2f(rectPos-shape.getPosition());
     newDir = dir/float(sqrt(pow(dir.x,2)+pow(dir.y,2)));
     shape.move(newDir*speed);
-//    std::cout<<shape.getPosition().x<<", "<<shape.getPosition().y<<std::endl;
 }
 
 sf::RectangleShape Enemy::getShape() {
