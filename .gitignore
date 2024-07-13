@@ -8,3 +8,5 @@ main.cpp
 **/.DS_Store
 .DS_Store
 lib/
+include/
+executable/
